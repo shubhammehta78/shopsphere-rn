@@ -5,5 +5,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { products } from "../../data/products";
 import { ProductArtwork } from "../../components/product-artwork";
 import { useCart } from "../../store/cart";
+import { useWishlist } from "../../store/wishlist";
 import { styles } from "./styles";
-export default function ProductDetailsScreen(){const{id}=useLocalSearchParams<{id:string}>();const router=useRouter();const{add}=useCart();const product=useMemo(()=>products.find(p=>p.id===id),[id]);if(!product)return <SafeAreaView style={styles.safe}><View style={styles.center}><Text>Product not found.</Text><Pressable onPress={()=>router.back()}><Text>Go back</Text></Pressable></View></SafeAreaView>;return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.content}><Pressable onPress={()=>router.back()} style={styles.back}><Text style={styles.backText}>← Back</Text></Pressable><ProductArtwork product={product} large/><View style={styles.meta}><Text style={styles.category}>{product.category}</Text><Text style={styles.name}>{product.name}</Text><View style={styles.row}><Text style={styles.price}>{"$"+product.price}</Text><Text style={styles.rating}>{"★ "+product.rating+" · "+product.reviews+" reviews"}</Text></View></View><Text style={styles.description}>{product.description}</Text><Text style={styles.label}>Available colors</Text><View style={styles.colors}>{product.colors.map(c=><View key={c} style={[styles.color,{backgroundColor:c}]}/>)}</View><View style={styles.specs}>{[["SHIPPING","Free over $100"],["RETURNS","30 days"],["STOCK","Ready to ship"]].map(([a,b])=><View key={a}><Text style={styles.specLabel}>{a}</Text><Text style={styles.specValue}>{b}</Text></View>)}</View><Pressable onPress={()=>{add(product);router.push("/cart")}} style={styles.cta}><Text style={styles.ctaText}>{"Add to cart · $"+product.price}</Text></Pressable></ScrollView></SafeAreaView>}
+
+export default function ProductDetailsScreen(){
+ const{id}=useLocalSearchParams<{id:string}>();const router=useRouter();const{add}=useCart();const{isSaved,toggle}=useWishlist();const product=useMemo(()=>products.find(p=>p.id===id),[id]);
+ if(!product)return <SafeAreaView style={styles.safe}><View style={styles.center}><Text>Product not found.</Text><Pressable onPress={()=>router.back()}><Text>Go back</Text></Pressable></View></SafeAreaView>;
+ const saved=isSaved(product.id);
+ return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.content}>
+  <View style={styles.topBar}><Pressable onPress={()=>router.back()} style={styles.back}><Text style={styles.backText}>← Back</Text></Pressable><Pressable onPress={()=>toggle(product.id)} style={styles.save} accessibilityLabel={saved?"Remove from wishlist":"Save to wishlist"}><Text style={[styles.saveIcon,saved&&styles.saveIconActive]}>{saved?"♥":"♡"}</Text></Pressable></View>
+  <ProductArtwork product={product} large/>
+  <View style={styles.meta}><Text style={styles.category}>{product.category}</Text><Text style={styles.name}>{product.name}</Text><View style={styles.row}><Text style={styles.price}>{"$"+product.price}</Text><Text style={styles.rating}>{"★ "+product.rating+" · "+product.reviews+" reviews"}</Text></View></View>
+  <Text style={styles.description}>{product.description}</Text><Text style={styles.label}>Available colors</Text><View style={styles.colors}>{product.colors.map(c=><View key={c} style={[styles.color,{backgroundColor:c}]}/>)}</View>
+  <View style={styles.specs}>{[["SHIPPING","Free over $100"],["RETURNS","30 days"],["STOCK","Ready to ship"]].map(([a,b])=><View key={a}><Text style={styles.specLabel}>{a}</Text><Text style={styles.specValue}>{b}</Text></View>)}</View>
+  <Pressable onPress={()=>{add(product);router.push("/cart")}} style={styles.cta}><Text style={styles.ctaText}>{"Add to cart · $"+product.price}</Text></Pressable>
+ </ScrollView></SafeAreaView>;
+}
