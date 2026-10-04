@@ -1,0 +1,2 @@
+export type ShippingAddress={fullName:string;line1:string;city:string;postalCode:string;country:string};
+export type Order={id:string;createdAt:string;items:{productId:string;quantity:number}[];total:number;status:"Confirmed"|"Shipped"|"Delivered";shipping:ShippingAddress};
