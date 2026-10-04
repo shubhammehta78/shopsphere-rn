@@ -4,13 +4,30 @@ Independent React Native + Expo e-commerce portfolio project by Shubham Mehta.
 
 ## Architecture
 
-The project follows a modular structure designed for maintainability and consistent UI:
+Expo Router owns the route layer under `src/app`. Reusable application code stays outside it.
 
 ```text
-app/                         # Expo Router entry points only
 src/
-  theme/                     # Design tokens: colors, spacing, radii, typography
-  screens/
+  app/                         # Expo Router routes only
+    _layout.tsx
+    (tabs)/
+      _layout.tsx
+      index.tsx
+      explore.tsx
+      cart.tsx
+      profile.tsx
+    product/
+      [id].tsx
+    wishlist.tsx
+
+  theme/                       # Shared design tokens
+    colors.ts
+    spacing.ts
+    radii.ts
+    typography.ts
+    index.ts
+
+  screens/                     # Feature/module screens
     home/
       index.tsx
       styles.ts
@@ -26,35 +43,53 @@ src/
     product-details/
       index.tsx
       styles.ts
-  components/
+    wishlist/
+      index.tsx
+      styles.ts
+
+  components/                  # Reusable UI
     product-card/
       index.tsx
       styles.ts
     product-artwork/
       index.tsx
       styles.ts
-  navigation/
+
+  navigation/                  # Navigator configuration
     root/
     tabs/
+
+  store/                       # Application state
+    cart/
+    wishlist/
+
   data/
-  store/
   types/
 ```
 
-**Rule:** screens and reusable components should keep their presentation styles in their colocated `styles.ts` file and consume shared design tokens from `src/theme`.
+### Architecture rules
 
-## Demonstrates
+- `src/app` is **routes only** because Expo Router uses file-based routing.
+- `src/navigation` contains navigator configuration, not route files.
+- Every screen/module gets an `index.tsx` and colocated `styles.ts`.
+- Reusable components follow the same `index.tsx + styles.ts` pattern.
+- Shared colors, spacing, radii and typography come from `src/theme`.
+- No confidential employer code, screenshots, business logic or data is used.
 
-- React Native + TypeScript
-- Expo Router navigation
+## Current features
+
+- Product catalogue
+- Search
+- Category filtering
+- Product details
+- Persistent cart
+- Persistent wishlist / saved items
+- Empty states
 - Reusable product components
-- Search and category filtering
-- Product detail flow
-- Persistent cart with Async Storage
 - Responsive iOS and Android UI
-- Empty states and accessible press targets
-- Shared design system / theme tokens
-- Separation of routing, screens, components, state and styling
+- Typed navigation
+- Shared design tokens
+- Clean separation of routing, screens, components, state and styling
 
 ## Run
 
@@ -64,6 +99,4 @@ npm run typecheck
 npx expo start
 ```
 
-Expo's documentation confirms `npx expo start` as the standard command for starting the development server, and Expo has first-class TypeScript support. citeturn0search0turn0search1
-
-For a physical Android device, Expo recommends using Expo Go for quick development/testing; production-grade projects can use a development build when custom native modules are needed. citeturn0search3
+Expo Router officially supports `src/app` as the route directory; it takes precedence over a root `app` directory. The `src/app` directory should contain routes/layouts, while application components and other code belong outside it. citeturn0search1turn0search3
