@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "ShopSphere",
+    "slug": "shopsphere",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "shopsphere",
+    "plugins": ["expo-router"],
+    "experiments": { "typedRoutes": true },
+    "ios": { "supportsTablet": true, "bundleIdentifier": "com.shubhammehta.shopsphere" },
+    "android": { "package": "com.shubhammehta.shopsphere" },
+    "web": { "bundler": "metro" }
+  }
+}
